@@ -1,0 +1,513 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Noto+Sans+TC&display=swap');
+
+@font-face {
+    font-family: coolvetica;
+    src: url(../webfonts/coolvetica.otf);
+}
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+	v2.0 | 20110126
+	License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* 表單元素重設：確保繼承字體與外觀一致 */
+input, button, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+}
+
+* {
+    box-sizing: border-box; /* 所有元素皆不累加邊框與內距 */
+}
+
+:root {
+    --top_grey: #202020;
+    --grey: #d9d9d9;
+    --deep_grey: #333333; /* 修正：補上 deep_grey 變數定義 */
+    --white: #fff;
+    --bottom_grey: #333;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Helvetica, Arial, "蘋方-繁", "PingFang TC", "黑體-繁", "Heiti TC", "微軟正黑體", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+}
+
+img {
+    display: block;
+    max-width: 100%; /* 優化：防止小圖被強制拉大 */
+    height: auto;    /* 優化：維持比例不變形 */
+}
+
+a {
+    display: block;
+    color: var(--deep_grey); /* 現在可以正常讀取到變數了 */
+    text-decoration: none;   /* 取消a預設底線 */
+}
+
+/* 以上為一個網頁基本的css基本模組 */
+
+
+
+
+/* 手機版單頁面：多區塊垂直排列與水平置中 */
+html, body {
+    min-height: 100%;       /* 改為最小高度，確保內容變多時可以正常往下滾動 */
+    background-color: var(--grey); 
+}
+
+body {
+    display: flex;
+    flex-direction: column; /* 關鍵：讓區塊由上往下垂直排列 */
+    align-items: center;     /* 關鍵：讓所有區塊水平置中 */
+    /* padding: 30px 20px; 上下留白 30px，左右留白 20px */
+}
+
+/* 限制每個圖片盒子的最大寬度 */
+.mobile-only-box {
+    width: 100%;
+    max-width: 500px;       /* 限制手機閱讀的最佳寬度 */
+    /* margin-bottom: 20px; 關鍵：第一張圖與第二張圖之間的間距 */
+}
+
+/* 確保最後一個區塊不會有下邊距 */
+.mobile-only-box:last-child {
+    margin-bottom: 0;
+}
+
+.mobile-only-box img {
+    width: 100%;
+    height: auto;
+}
+
+/* 外層容器：讓第二個區塊具備定位能力 */
+.mobile-only-box {
+    position: relative; 
+}
+
+/* 疊在上面的新圖定位與大小設定 */
+.overlay-img {
+    position: absolute;
+    z-index: 99;            /* 確保這張圖一定在最上層 */
+    
+    /* 修正補上：控制重疊的位置與大小 */
+    top: 0;                 /* 靠齊底圖最上方（可依需求修改，如 10%） */
+    left: 0;                /* 靠齊底圖最左方（可依需求修改，如 5%） */
+    width: 100%;            /* 寬度與底圖一模一樣大（可依需求修改，如 90%） */
+}
+
+/* 疊在上面的新圖：基礎定位 */
+.overlay-img {
+    position: absolute;
+    z-index: 99;            
+    top: 0;                 
+    left: 0;                
+    width: 100%;            
+}
+
+/* 1. 定義動畫動作：由下往上淡入 */
+@keyframes customFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(80px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 2. 預設狀態：動畫尚未觸發前，先隱藏 */
+.kv-fade-in {
+    opacity: 0; 
+}
+
+/* 3. 關鍵觸發狀態：當網頁幫它加上 .is-active 時，才執行 CSS 動畫 */
+.kv-fade-in.is-active {
+    /* 名稱 持續1.2秒 速度曲線 結束後定格 */
+    animation: customFadeUp 1.2s ease-out forwards;
+}
+
+
+
+/* ==========================================================================
+   ★全新加入：第三層圖片絕對定位與無限漂浮動畫
+   ========================================================================== */
+
+/* 1. 定義漂浮動作：在 Y 軸上下平滑位移 12 像素 */
+@keyframes pureFloating {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-12px); /* 往上飄移 12px */
+    }
+    100% {
+        transform: translateY(0);    /* 回到原位 */
+    }
+}
+
+/* 2. 最上層圖片的定位與動畫套用 */
+.overlay-floating {
+    position: absolute;
+    z-index: 100;           /* 數字設 100，確保絕對壓在中間層 99 的上方 */
+    top: 0;
+    left: 0;
+    width: 100%;            /* 預設與底圖一樣滿版重疊 */
+    
+    /* 套用動畫：名稱 持續 2.5 秒 平滑前後運動 無限循環 */
+    animation: pureFloating 2.5s ease-in-out infinite;
+    will-change: transform; /* 優化手機硬體加速，防止晃動閃爍 */
+}
+
+.overlay-floating img {
+    width: 100%;
+    height: auto;
+}
+
+/* ==========================================================================
+   ★ 節奏和緩優化：等待 .kv-fade-normal (1.2s) 結束後，四元素等速（等差 1.0s）進場
+   ========================================================================== */
+
+/* 1. 第一個滑入：picture.png (完美接續在 1.2 秒後觸發) */
+.mobile-only-box .kv-fade-in:nth-child(3).is-active {
+    animation-delay: 1.2s;
+}
+
+/* 2. 第二個滑入：text_1.png (間隔 1.0 秒 ➡️ 2.2 秒) */
+.mobile-only-box .kv-fade-in:nth-child(4).is-active {
+    animation-delay: 2.2s;
+}
+
+/* 3. 第三個滑入：text_2.png (間隔 1.0 秒 ➡️ 3.2 秒) */
+.mobile-only-box .kv-fade-in:nth-child(5).is-active {
+    animation-delay: 3.2s;
+}
+
+/* 4. 第四個滑入：CTA 連結按鈕 (間隔 1.0 秒 ➡️ 4.2 秒壓軸登場) */
+.mobile-only-box .kv-fade-in:nth-child(6).is-active {
+    animation-delay: 4.2s;
+}
+
+
+
+
+
+
+
+/* ==========================================================================
+   ★全新修正：第四區塊專用「以正中心為軸心」的左右微旋轉擺動 (.overlay-sway)
+   ========================================================================= */
+
+/* 1. 定義順時針微自轉（角度縮小到微幅的 3 度，更精緻） */
+@keyframes centerRotating {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(3deg); }   /* 繞著正中心往右轉 3 度 */
+    100% { transform: rotate(0deg); }
+}
+
+/* 2. 定義逆時針微自轉 */
+@keyframes centerRotatingReverse {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(-3deg); }  /* 繞著正中心往左轉 3 度 */
+    100% { transform: rotate(0deg); }
+}
+
+/* 3. 基礎定位與「中心點軸心」設定 */
+.overlay-sway {
+    position: absolute;
+    z-index: 100;           
+    top: 0;
+    left: 0;
+    width: 100%;            
+    
+    /* 關鍵：將旋轉支點改回圖片的「正中央」，做出原地的晃動感 */
+    transform-origin: center center; 
+    will-change: transform; 
+}
+
+.overlay-sway img {
+    width: 100%;
+    height: auto;
+}
+
+/* 4. 使用精確序號點名，賦予兩張裝飾圖反向的速度與時間差 */
+
+/* 第一個旋轉元件 (block_4_decorate_1.png) - 實際為第 5 個子元素 */
+.mobile-only-box .overlay-sway:nth-child(5) {
+    animation: centerRotating 4s ease-in-out infinite; /* 拉長到 4 秒，動作更輕柔 */
+}
+
+/* 第二個旋轉元件 (block_4_decorate_2.png) - 實際為第 6 個子元素 */
+.mobile-only-box .overlay-sway:nth-child(6) {
+    animation: centerRotatingReverse 3.5s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   ★全新加入：開場全覆蓋歡迎畫面 (Welcome Popup)
+   ========================================================================== */
+
+/* 1. 定義開場動畫：靜止 2 秒 ➡️ 用 0.5 秒淡出 ➡️ 最終徹底隱藏 */
+@keyframes welcomeFadeOut {
+    0% {
+        opacity: 1;
+        visibility: visible;
+    }
+    80% {
+        /* 在前 2 秒（總時間的 80%）維持完全顯現 */
+        opacity: 1;
+        visibility: visible;
+    }
+    100% {
+        /* 最後 0.5 秒（剩餘的 20%）淡出至完全透明，並關閉點擊功能 */
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* ==========================================================================
+   ★最終精準定案：5.0 秒總長度開場影片 Popup（保留 1.0 秒超優雅慢速淡出）
+   ========================================================================== */
+
+/* 重新計算比例：
+   0% ~ 80%（前 4.0 秒）：影片 100% 清晰播放，完成信封打開的完整動作。
+   80% ~ 100%（後 1.0 秒）：利用剩餘的 20% 時間，維持一模一樣的慢速優雅淡化。 */
+@keyframes welcomeFadeOut {
+    0% {
+        opacity: 1;
+        visibility: visible;
+    }
+    80% {
+        /* 5.0 秒的 80% 剛好是 4.0 秒，在此之前畫面完全不變透明 */
+        opacity: 1;
+        visibility: visible;
+    }
+    100% {
+        /* 最後整整 1.0 秒鐘，溫柔地變透明並隱藏 */
+        opacity: 0;
+        visibility: hidden; /* 徹底關閉點擊功能，把控制權還給原網頁 */
+    }
+}
+
+/* 全螢幕覆蓋盒子樣式 */
+.welcome-popup {
+    position: fixed;        
+    top: 0;
+    left: 0;
+    width: 100vw;           
+    height: 100vh;          
+    background-color: #ffffff; /* 可依影片色系改為 #ffffff 白色或 #000000 黑色 */
+    z-index: 99999;         
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    
+    /* 💡 精準鎖定總時間為 5 秒 */
+    animation: welcomeFadeOut 7s ease-in-out forwards;
+}
+
+/* 影片自適應手機螢幕尺寸 */
+.welcome-popup video {
+    width: 100%;
+    max-width: 500px;       
+    height: 100%;
+    object-fit: cover; /* 確保影片完美填滿手機螢幕，不因各款手機高度不同而變形 */
+}
+
+/* ==========================================================================
+   ★完美排除：全面修正手機版網頁 X 軸溢出、徹底消除左右微幅晃動
+   ========================================================================== */
+
+/* 1. 強制鎖死全網頁的 X 軸：不論任何元件怎麼晃動位移，一律不准產生左右滾動條 */
+html, body {
+    width: 100%;
+    overflow-x: hidden; /* 關鍵：強制隱藏水平溢出，鎖定與手機同寬 */
+}
+
+/* 2. 修正開場 Popup 滿版寬度：將 100vw 更換為 100%，避開垂直捲軸的寬度計算 */
+.welcome-popup {
+    width: 100% !important; /* 利用 100% 取代 100vw，自動扣除捲軸空間 */
+}
+
+/* ==========================================================================
+   ★ 全新獨立效果：定點逐漸淡入（不產生位移，與原滑入動畫完全分開）
+   ========================================================================== */
+
+/* 1. 定義全新獨立動畫：純透明度由 0 變 1 */
+@keyframes pureFadeNormal {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* 2. 預設狀態：動畫尚未觸發前，先隱藏 */
+.kv-fade-normal {
+    opacity: 0; 
+}
+
+/* 3. 關鍵觸發狀態：當 JS 幫它加上 .is-active 時，才執行此定點淡入 */
+.kv-fade-normal.is-active {
+    /* 名稱 持續 1.2 秒 速度曲線 結束後定格 */
+    animation: pureFadeNormal 1.2s ease-out forwards;
+}
+
+/* 4. 如果您有多張圖需要排隊，這裡也預留好時間差設定 */
+.mobile-only-box .kv-fade-normal.is-active:nth-of-type(1) { animation-delay: 0s; }
+.mobile-only-box .kv-fade-normal.is-active:nth-of-type(2) { animation-delay: 0.6s; }
+.mobile-only-box .kv-fade-normal.is-active:nth-of-type(3) { animation-delay: 1.2s; }
+
+/* ==========================================================================
+   ★ 全新獨立效果：由左至右滑入並逐漸淡入 (.kv-fade-left)
+   ========================================================================== */
+
+/* 1. 定義動畫動作：從左邊 -60px 處，水平往右滑移並淡入 */
+@keyframes customFadeLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-60px); /* 負值代表在左邊 */
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);     /* 回到原位 */
+    }
+}
+
+/* 2. 預設狀態：動畫尚未觸發前，先隱藏 */
+.kv-fade-left {
+    opacity: 0; 
+}
+
+/* 3. 關鍵觸發狀態：當網頁幫它加上 .is-active 時，才執行此動畫 */
+.kv-fade-left.is-active {
+    /* 名稱 持續 1.2 秒 速度曲線 結束後定格 */
+    animation: customFadeLeft 1.2s ease-out forwards;
+}
+
+/* 4. 為新效果預留的排隊時序設定（可依據您的區塊需求自行調整或複製） */
+.mobile-only-box .kv-fade-left.is-active:nth-of-type(1) { animation-delay: 0s; }
+
+/* ==========================================================================
+   ★ 第 4 區塊專屬時間差修正：picture_1 ➡️ picture_2 ➡️ text (等差 1.0s)
+   ========================================================================== */
+
+/* 1. 第一個由下往上：block_4_picture_1.png (在第 2 個子元素，0秒直接觸發) */
+.mobile-only-box .kv-fade-in:nth-child(2).is-active {
+    animation-delay: 0s;
+}
+
+/* 2. 第二個由下往上：block_4_picture_2.png (在第 3 個子元素，延遲 1.0 秒) */
+.mobile-only-box .kv-fade-in:nth-child(3).is-active {
+    animation-delay: 1.0s;
+}
+
+/* 3. 💡 成功攔截並排序：block_4_text.png (由左至右，在第 4 個子元素，精準安排在 2.0 秒) */
+.mobile-only-box .kv-fade-left:nth-child(4).is-active {
+    animation-delay: 2.0s;
+}
+
+
+/* ==========================================================================
+   ★ 第 5 區塊專屬時間差修正：picture_1 ➡️ picture_2 ➡️ text (不干涉其他區塊)
+   ========================================================================== */
+
+/* 1. 第一個由下往上：block_5_picture_1.png (在第 2 個子元素，0秒直接觸發) */
+.mobile-only-box .kv-fade-in:nth-child(2).is-active {
+    animation-delay: 0s;
+}
+
+/* 2. 第二個由下往上：block_5_picture_2.png (在第 3 個子元素，延遲 1.0 秒) */
+.mobile-only-box .kv-fade-in:nth-child(3).is-active {
+    animation-delay: 1.0s;
+}
+
+/* 3. 💡 成功排序：block_5_text.png (原地定點淡入，在第 4 個子元素，精準排在 2.0 秒) */
+.mobile-only-box .kv-fade-normal:nth-child(4).is-active {
+    animation-delay: 2.0s;
+}
+
+
+/* ==========================================================================
+   ★ 輕快等速版優化：整體間隔由 1.0s 縮短至 0.7s（節奏快 0.3 秒）
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   【第二區塊】時間差調整 (等待 special 淡入 1.2s 後，以 0.7s 等差接力)
+   -------------------------------------------------------------------------- */
+/* 1. picture.png (1.2秒接棒) */
+.mobile-only-box .kv-fade-in:nth-child(3).is-active { animation-delay: 1.2s; }
+
+/* 2. text_1.png (1.2s + 0.7s) */
+.mobile-only-box .kv-fade-in:nth-child(4).is-active { animation-delay: 1.9s; }
+
+/* 3. text_2.png (1.9s + 0.7s) */
+.mobile-only-box .kv-fade-in:nth-child(5).is-active { animation-delay: 2.6s; }
+
+/* 4. CTA 連結按鈕 (2.6s + 0.7s 壓軸) */
+.mobile-only-box .kv-fade-in:nth-child(6).is-active { animation-delay: 3.3s; }
+
+
+/* --------------------------------------------------------------------------
+   【第四區塊】時間差調整 (以 0.7s 等差接力)
+   -------------------------------------------------------------------------- */
+/* 1. picture_1.png (0秒觸發) */
+.mobile-only-box .kv-fade-in:nth-child(2).is-active { animation-delay: 0s; }
+
+/* 2. picture_2.png (0.7秒) */
+.mobile-only-box .kv-fade-in:nth-child(3).is-active { animation-delay: 0.7s; }
+
+/* 3. text.png (由左至右，1.4秒) */
+.mobile-only-box .kv-fade-left:nth-child(4).is-active { animation-delay: 1.4s; }
+
+
+/* --------------------------------------------------------------------------
+   【第五區塊】時間差調整 (以 0.7s 等差接力)
+   -------------------------------------------------------------------------- */
+/* 1. picture_1.png (0秒觸發) */
+.mobile-only-box .kv-fade-in:nth-child(2).is-active { animation-delay: 0s; }
+
+/* 2. picture_2.png (0.7秒) */
+.mobile-only-box .kv-fade-in:nth-child(3).is-active { animation-delay: 0.7s; }
+
+/* 3. text.png (定點淡入，1.4秒) */
+.mobile-only-box .kv-fade-normal:nth-child(4).is-active { animation-delay: 1.4s; }
